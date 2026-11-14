@@ -57,7 +57,7 @@ function HeroInvoice() {
       </motion.div>
       <div className="hero-caption">
         <span aria-live="polite">{s.caption}</span>
-        <div className="hero-steps" role="group" aria-label="Invoice states">
+        <fieldset className="hero-steps" aria-label="Invoice states">
           {STAGES.map((x, i) => (
             <button
               key={x.id}
@@ -71,7 +71,7 @@ function HeroInvoice() {
               {x.label}
             </button>
           ))}
-        </div>
+        </fieldset>
       </div>
     </div>
   );

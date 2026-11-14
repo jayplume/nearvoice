@@ -983,6 +983,10 @@ code {
 .hero-steps {
   display: flex;
   gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
 }
 
 .hero-steps button {

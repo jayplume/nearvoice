@@ -60,7 +60,7 @@ const opened = await open(inv.sealed, s.key, inv.digest);
 console.log(`     decrypted from chain: ${opened.details.to.name}, matches chain digest: ${opened.matchesChain}`);
 
 const faucet = await call(CLIENT, USDC, "faucet", {}).catch(() => null);
-if (faucet && faucet.ok) step("client takes test USDC", faucet);
+if (faucet?.ok) step("client takes test USDC", faucet);
 step(
   `client pays invoice ${id}`,
   await call(CLIENT, USDC, "ft_transfer_call", { receiver_id: INVOICES, amount: units.toString(), msg: JSON.stringify({ pay: id }) }, 1n, 100_000_000_000_000n),

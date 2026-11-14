@@ -13,7 +13,8 @@ if (existsSync(".env")) process.loadEnvFile(".env");
 const cred = `${homedir()}/.near-credentials/testnet/${process.env.RELAYER_ACCOUNT ?? "nearvoice.testnet"}.json`;
 if (!process.env.RELAYER_KEY && existsSync(cred)) process.env.RELAYER_KEY = JSON.parse(readFileSync(cred, "utf8")).private_key;
 
-const routes: Record<string, () => Promise<{ POST: (r: Request) => Promise<Response> }>> = {
+type Load = () => Promise<{ POST: (r: Request) => Promise<Response> }>;
+const routes: Partial<Record<string, Load>> = {
   "/api/relay": () => import("../api/relay.js"),
   "/api/onboard": () => import("../api/onboard.js"),
   "/api/ai": () => import("../api/ai.js"),
@@ -34,7 +35,11 @@ createServer(async (req, res) => {
   headers.set("x-forwarded-for", req.socket.remoteAddress ?? "local");
   const started = Date.now();
   const out = await (await load()).POST(new Request(url, { method: "POST", headers, body: Buffer.concat(chunks) }));
-  res.writeHead(out.status, Object.fromEntries(out.headers));
+  const outHeaders: Record<string, string> = {};
+  out.headers.forEach((v, k) => {
+    outHeaders[k] = v;
+  });
+  res.writeHead(out.status, outHeaders);
   res.end(Buffer.from(await out.arrayBuffer()));
   console.log(`${out.status} ${url.pathname} ${Date.now() - started} ms`);
 }).listen(3000, () => console.log("Nearvoice API on http://localhost:3000"));
