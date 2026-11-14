@@ -43,6 +43,8 @@ Runs on NEAR **testnet** with test USDC. No real money moves. Anyone can take 1,
 | Relayer and account parent | [`nearvoice.testnet`](https://testnet.nearblocks.io/address/nearvoice.testnet) |
 | Private model | `deepseek-ai/DeepSeek-V4.1-Flash-1017` on NEAR AI Cloud (Intel TDX + NVIDIA confidential GPUs) |
 
+**A real payment, end to end.** Invoice #5 ($820 from Ada Okafor Studio to Lumen Labs, split 80/20) was drafted by the private model, sealed and recorded gaslessly, then paid from a Meteor wallet (`itup.testnet`). One transaction moved 820 test USDC into the contract, marked the invoice paid and paid 656 to `ada-okafor.nearvoice.testnet` and 164 to `kofi-mensah.nearvoice.testnet`: [Cxfx5HVc…BbBn3v](https://testnet.nearblocks.io/txns/Cxfx5HVcooUp7MpFJWsiVjTAqSA65yDMug4sD1BbBn3v).
+
 ---
 
 ## For developers
