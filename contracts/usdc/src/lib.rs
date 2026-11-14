@@ -4,6 +4,7 @@
 //! * `faucet()` mints up to 1,000 tUSDC to the caller, once an hour.
 //! * Receivers never need a storage deposit: the token registers them on first
 //!   receipt and pays the storage itself, the way most people expect money to work.
+//!
 //! 6 decimals, like USDC.
 
 use near_contract_standards::fungible_token::events::FtMint;
@@ -128,7 +129,11 @@ impl StorageManagement for TestUsdc {
     }
 
     fn storage_balance_of(&self, account_id: AccountId) -> Option<StorageBalance> {
-        Some(StorageBalance { total: NearToken::from_near(0), available: NearToken::from_near(0) }).filter(|_| self.token.accounts.contains_key(&account_id))
+        if self.token.accounts.contains_key(&account_id) {
+            Some(StorageBalance { total: NearToken::from_near(0), available: NearToken::from_near(0) })
+        } else {
+            None
+        }
     }
 }
 

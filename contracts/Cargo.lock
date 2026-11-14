@@ -2253,12 +2253,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "nearhearth"
+name = "nearvoice-invoices"
+version = "0.1.0"
+dependencies = [
+ "near-sdk",
+]
+
+[[package]]
+name = "nearvoice-usdc"
 version = "0.1.0"
 dependencies = [
  "near-contract-standards",
  "near-sdk",
- "serde_json",
 ]
 
 [[package]]

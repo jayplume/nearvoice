@@ -1,0 +1,15 @@
+[package]
+name = "nearvoice-invoices"
+version = "0.1.0"
+edition = "2021"
+description = "Nearvoice: private invoices paid in stablecoins, settled and split on NEAR."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { workspace = true }
+
+[dev-dependencies]
+near-sdk = { workspace = true, features = ["unit-testing"] }
