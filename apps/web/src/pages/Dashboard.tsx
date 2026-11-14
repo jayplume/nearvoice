@@ -4,9 +4,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { Spinner, StatusChip, TxLink, useToast } from "../components/parts";
 import { type ChainInvoice, type Split, accountExists, getProfile, listByIssuer, usdcBalance, view } from "../lib/chain";
-import { INVOICES, SUFFIX, USDC, accountUrl } from "../lib/config";
+import { INVOICES, SUFFIX, USDC, accountUrl, txUrl } from "../lib/config";
 import { ago, date, isoDay, short, usdc } from "../lib/format";
 import { type Identity, backupFile, forgetIdentity, loadIdentity, onboard, restore, setProfile } from "../lib/freelancer";
+import { contractReceipts, proofsFor } from "../lib/proofs";
 import { Link } from "../lib/router";
 import { vaultAll, vaultGet } from "../lib/vault";
 
@@ -135,8 +136,12 @@ function Invoices({ id }: { id: Identity }) {
     if (filter === "closed") return xs.filter((x) => x.status === "cancelled" || x.status === "refunded");
     return xs.filter((x) => x.status === filter);
   }, [q.data, filter]);
-  const exportCsv = () => {
+  const [exporting, setExporting] = useState(false);
+  const exportCsv = async () => {
+    setExporting(true);
     const vault = vaultAll();
+    // The proof column links the transaction behind each invoice's current status.
+    const receipts = await contractReceipts().catch(() => []);
     const csv = toCsv(
       (q.data ?? []).map((inv) => {
         const v = vault[String(inv.id)];
@@ -150,11 +155,16 @@ function Invoices({ id }: { id: Identity }) {
           currency: "USDC",
           status: inv.status,
           payer: inv.payer ?? "",
-          proof: `${accountUrl(INVOICES)} invoice #${inv.id}`,
+          proof: (() => {
+            const p = proofsFor(inv, receipts);
+            const h = p.closed ?? p.paid ?? p.created;
+            return h ? txUrl(h) : `${accountUrl(INVOICES)} invoice #${inv.id}`;
+          })(),
         };
       }),
     );
     download(new Blob([csv], { type: "text/csv" }), `nearvoice-${id.accountId.split(".")[0]}-${isoDay(Date.now())}.csv`);
+    setExporting(false);
   };
   return (
     <section className="panel">
@@ -168,8 +178,8 @@ function Invoices({ id }: { id: Identity }) {
               </button>
             ))}
           </div>
-          <button type="button" className="btn btn--sm" onClick={exportCsv} disabled={!q.data?.length}>
-            Export CSV
+          <button type="button" className="btn btn--sm" onClick={exportCsv} disabled={!q.data?.length || exporting}>
+            {exporting ? "Preparing…" : "Export CSV"}
           </button>
         </div>
       </div>

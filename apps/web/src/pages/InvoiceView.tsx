@@ -4,35 +4,49 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { InvoicePaper, LockIcon, QuotePanel } from "../components/invoice";
 import { Spinner, StatusChip, TxLink, useToast } from "../components/parts";
-import { type ChainInvoice, type Split, faucetReadyAt, getInvoice, usdcBalance } from "../lib/chain";
+import { type ChainInvoice, faucetReadyAt, getInvoice, usdcBalance } from "../lib/chain";
 import { INVOICES, accountUrl } from "../lib/config";
 import { date, short, usdc } from "../lib/format";
 import { cancelInvoice, loadIdentity, refund } from "../lib/freelancer";
+import { contractReceipts, proofsFor } from "../lib/proofs";
 import { Link } from "../lib/router";
+import { splitAmounts } from "../lib/split";
 import { WALLETS, connect, connectedAccount, disconnect, payInvoice, takeTestUsdc } from "../lib/wallet";
 
-/** The same arithmetic as the contract's split_amounts: floor each share, the remainder to the first recipient. */
-export function splitAmounts(amount: bigint, splits: Split[], issuer: string): { account_id: string; bps: number; amount: bigint }[] {
-  const list = splits.length ? splits : [{ account_id: issuer, bps: 10_000 }];
-  const out = list.map((s) => ({ ...s, amount: (amount * BigInt(s.bps)) / 10_000n }));
-  const rest = amount - out.reduce((a, s) => a + s.amount, 0n);
-  out[0]!.amount += rest;
-  return out;
-}
-
+/** Each status, with the transaction that proves it (found through NearBlocks; the indexer can lag a few seconds). */
 function Timeline({ inv }: { inv: ChainInvoice }) {
+  const receipts = useQuery({
+    queryKey: ["receipts", inv.id, inv.status],
+    queryFn: () => contractReceipts(),
+    staleTime: 30_000,
+    refetchInterval: (q) => {
+      const p = q.state.data ? proofsFor(inv, q.state.data) : {};
+      const missing = !p.created || (inv.paid_ms && !p.paid) || (inv.closed_ms && !p.closed);
+      return missing && q.state.dataUpdateCount < 6 ? 8_000 : false;
+    },
+  });
+  const p = receipts.data ? proofsFor(inv, receipts.data) : {};
   const steps = [
-    { on: true, label: "Sealed and recorded on NEAR", when: date(inv.created_ms) },
-    { on: inv.status === "paid" || inv.status === "refunded", label: inv.payer ? `Paid by ${short(inv.payer)}` : "Paid", when: inv.paid_ms ? date(inv.paid_ms) : `due ${date(inv.due_ms)}` },
-    ...(inv.status === "cancelled" ? [{ on: true, label: "Cancelled by the sender", when: inv.closed_ms ? date(inv.closed_ms) : "" }] : []),
-    ...(inv.status === "refunded" ? [{ on: true, label: "Refunded to the payer", when: inv.closed_ms ? date(inv.closed_ms) : "" }] : []),
+    { on: true, label: "Sealed and recorded on NEAR", when: date(inv.created_ms), hash: p.created },
+    { on: inv.status === "paid" || inv.status === "refunded", label: inv.payer ? `Paid by ${short(inv.payer)}` : "Paid", when: inv.paid_ms ? date(inv.paid_ms) : `due ${date(inv.due_ms)}`, hash: p.paid },
+    ...(inv.status === "cancelled" ? [{ on: true, label: "Cancelled by the sender", when: inv.closed_ms ? date(inv.closed_ms) : "", hash: p.closed }] : []),
+    ...(inv.status === "refunded" ? [{ on: true, label: "Refunded to the payer", when: inv.closed_ms ? date(inv.closed_ms) : "", hash: p.closed }] : []),
   ];
   return (
     <ol className="timeline">
       {steps.map((s) => (
         <li key={s.label} className={s.on ? "on" : ""}>
           {s.label}
-          <small>{s.when}</small>
+          <small>
+            {s.when}
+            {s.on && s.hash && (
+              <>
+                {" · "}
+                <TxLink hash={s.hash}>proof {s.hash.slice(0, 8)}…</TxLink>
+              </>
+            )}
+            {s.on && !s.hash && receipts.isFetching && " · finding the transaction…"}
+          </small>
         </li>
       ))}
     </ol>
