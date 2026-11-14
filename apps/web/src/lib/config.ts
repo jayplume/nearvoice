@@ -1,0 +1,11 @@
+export const NETWORK = "testnet";
+export const INVOICES = "invoices.nearvoice.testnet";
+export const USDC = "usdc.nearvoice.testnet";
+export const SUFFIX = "nearvoice.testnet";
+export const RPCS = ["https://rpc.testnet.fastnear.com", "https://near-testnet.drpc.org", "https://archival-rpc.testnet.fastnear.com"];
+export const EXPLORER = "https://testnet.nearblocks.io";
+export const txUrl = (h: string) => `${EXPLORER}/txns/${h}`;
+export const accountUrl = (a: string) => `${EXPLORER}/address/${a}`;
+export const REPO = "https://github.com/jayplume/nearvoice";
+export const PAY_GAS = 100_000_000_000_000n;
+export const CALL_GAS = 50_000_000_000_000n;
