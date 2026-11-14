@@ -1,6 +1,12 @@
+<p align="center"><img src="brand/logo.png" alt="Nearvoice" width="280"></p>
+
 # Nearvoice
 
 **Private invoices that get paid in stablecoins, without the freelancer ever touching crypto.**
+
+[Live app](https://nearvoice.vercel.app) · [Architecture](docs/ARCHITECTURE.md) · [Security model](docs/SECURITY.md) · [Testing](docs/TESTING.md) · [Self-audit](docs/AUDIT.md)
+
+![Nearvoice](brand/og.png)
 
 This page is written for the person who keeps the books.
 
@@ -22,8 +28,53 @@ This page is written for the person who keeps the books.
 | What currency? | USDC (on this test network, a test version of it). Amounts are kept in whole cents. |
 | Who saw my invoice text when the AI read it? | Nobody: it runs on NEAR AI Cloud inside a sealed hardware enclave (TEE). The app checks the enclave's hardware attestation each time and shows what was checked. Nothing is stored after the answer returns. |
 
+## What is stored, and where
+
+Nothing about an invoice is stored on Nearvoice's servers. There is no database: the four server functions (`api/`) create accounts, pay gas, forward one AI request and relay two hardware verdicts, and keep nothing after they answer. The invoice lives on NEAR as ciphertext plus a fingerprint; its key lives in the link and in the freelancer's browser.
+
 ## Status of this build
 
-Runs on NEAR **testnet** with test USDC. No real money moves.
+Runs on NEAR **testnet** with test USDC. No real money moves. Anyone can take 1,000 test USDC from the faucet on an invoice page.
 
-Technical documentation for developers: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (added as the build progresses).
+| Piece | Where |
+|---|---|
+| Invoice contract | [`invoices.nearvoice.testnet`](https://testnet.nearblocks.io/address/invoices.nearvoice.testnet) |
+| Test USDC (NEP-141, 6 decimals, faucet) | [`usdc.nearvoice.testnet`](https://testnet.nearblocks.io/address/usdc.nearvoice.testnet) |
+| Relayer and account parent | [`nearvoice.testnet`](https://testnet.nearblocks.io/address/nearvoice.testnet) |
+| Private model | `deepseek-ai/DeepSeek-V4.1-Flash-1017` on NEAR AI Cloud (Intel TDX + NVIDIA confidential GPUs) |
+
+---
+
+## For developers
+
+```bash
+nvm use                      # Node 22+
+pnpm install
+cp .env.example .env         # NEARAI_API_KEY; RELAYER_KEY or a NEAR CLI credential for nearvoice.testnet
+pnpm dev:api                 # the Vercel functions on :3000
+pnpm dev                     # the app on :5176
+pnpm check                   # lint, types, tests
+```
+
+```
+contracts/invoices   Rust: invoices, payment and splits, refunds, kill switch, events
+contracts/usdc       Rust: NEP-141 test stablecoin with a faucet
+packages/core        TypeScript shared by browser and server: money, sealing, CSV, 1Click, attestation, signatures, relay policy
+api/                 Vercel functions: onboard, relay, ai, attest
+apps/web             React 19 + Vite app, light and dark
+scripts/             deploy, end-to-end testnet run, API smoke test, local API server
+```
+
+| Built with | For |
+|---|---|
+| near-sdk 5 (Rust), NEP-141, NEP-297 | contracts, token, events |
+| NEP-366 meta transactions, near-api-js 7 | gasless freelancer accounts |
+| NEAR AI Cloud | private model, TDX + GPU attestation, signed responses |
+| NEAR Intents 1Click API | pay-from-any-chain quotes |
+| NEAR Wallet Selector 10 (Meteor, Intear, HERE, Sender) | client payments |
+| Web Crypto (AES-256-GCM, SHA-256), @noble/curves | sealing, signature recovery |
+| Phala DCAP verifier, NVIDIA NRAS | hardware attestation verdicts |
+| NearBlocks API | transaction proof for every status |
+| React 19, Vite 7, TanStack Query, Motion, zod, Vitest, Testing Library, Biome | app and tooling |
+
+Licensed MIT.
