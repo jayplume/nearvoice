@@ -19,6 +19,8 @@ export async function POST(req: Request) {
     const text = String(body.text ?? "").trim();
     if (text.length < 5 || text.length > 2_000) throw new HttpError(400, "Write 5 to 2,000 characters");
     rateLimit(`ai:${req.headers.get("x-forwarded-for") ?? "?"}`, 20, 60 * 60_000);
+    // A daily inference budget for the whole deployment (per instance), set by the operator.
+    rateLimit("ai:day", Number(process.env.AI_DAILY_REQUESTS ?? 500), 24 * 60 * 60_000);
     const key = secret("NEARAI_API_KEY");
     // The exact bytes we send are what the enclave hashes and signs.
     const requestBody = JSON.stringify({

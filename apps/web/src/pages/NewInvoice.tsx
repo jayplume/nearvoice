@@ -18,7 +18,13 @@ interface Row {
   price: string;
 }
 
-const EXAMPLE = "Lumen Labs: 4 days redesigning the onboarding flow at $450 a day, plus 6.5 hours of design QA at $80/h. Due in two weeks. Thanks for a great project!";
+/** Fictional sample notes, so anyone can try the private model without real client data. */
+const EXAMPLES = [
+  { label: "Designer", text: "Lumen Labs: 4 days redesigning the onboarding flow at $450 a day, plus 6.5 hours of design QA at $80/h. Due in two weeks. Thanks for a great project!" },
+  { label: "Developer", text: "For Harbor Coffee Co: built the online ordering page, 22 hours at $95/h. Stripe-to-USDC checkout setup, flat $600. Hosting for November $25. Payment due in 10 days." },
+  { label: "Translator", text: "Translation of the Q3 investor letter, English to French, 3,200 words at $0.14 per word, plus a rush fee of $120 because they needed it in 48 hours. Client: Vela Ventures. Net 30." },
+];
+const EXAMPLE = EXAMPLES[0]!.text;
 
 const DAY = 86_400_000;
 const blank = (): Row => ({ description: "", quantity: "1", price: "" });
@@ -94,11 +100,12 @@ function AiDraft({ onDraft }: { onDraft: (d: Awaited<ReturnType<typeof draftPriv
         <button type="button" className="btn btn--primary" disabled={text.trim().length < 5 || run.isPending} onClick={() => run.mutate()}>
           {run.isPending ? <Spinner label="Drafting privately" /> : "Draft privately"}
         </button>
-        {!text && (
-          <button type="button" className="btn btn--ghost btn--sm" onClick={() => setText(EXAMPLE)}>
-            Use an example
-          </button>
-        )}
+        {!text &&
+          EXAMPLES.map((x) => (
+            <button key={x.label} type="button" className="btn btn--ghost btn--sm" onClick={() => setText(x.text)} title="Fictional sample notes">
+              Try: {x.label.toLowerCase()}
+            </button>
+          ))}
       </div>
       {steps.length > 0 && (
         <ol className="steps-live" aria-live="polite">
