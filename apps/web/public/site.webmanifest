@@ -1,0 +1,21 @@
+{
+  "name": "Nearvoice",
+  "short_name": "Nearvoice",
+  "description": "Private invoices, paid in stablecoins on NEAR.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef1f5",
+  "theme_color": "#3b5bfd",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
