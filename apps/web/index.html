@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nearvoice: private invoices, paid in stablecoins</title>
+    <meta name="description" content="Write an invoice in plain words, send a link, get paid in USDC on NEAR. Encrypted invoices, a private AI bookkeeper verified in a TEE, no gas for freelancers, and payments split automatically." />
+    <meta name="theme-color" content="#3b5bfd" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:title" content="Nearvoice: private invoices, paid in stablecoins" />
+    <meta property="og:description" content="Invoices only the client can read. Paid in USDC on NEAR, split automatically, gasless for the freelancer." />
+    <meta property="og:image" content="https://nearvoice.vercel.app/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script>
+      // Apply the saved or system theme before first paint, so there is no flash.
+      try {
+        var t = localStorage.getItem("nearvoice:theme");
+        if (t !== "light" && t !== "dark") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = t;
+      } catch (e) {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
