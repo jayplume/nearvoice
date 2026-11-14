@@ -11,12 +11,15 @@
   },
   "scripts": {
     "dev": "pnpm --filter web dev",
-    "dev:api": "tsx scripts/dev-api.ts",
-    "build": "pnpm -r build",
+    "dev:api": "tsx --conditions=source scripts/dev-api.ts",
+    "build": "pnpm --filter @nearvoice/core build && pnpm --filter web build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck && tsc -p tsconfig.json",
     "lint": "biome lint .",
-    "check": "pnpm lint && pnpm typecheck && pnpm test"
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "e2e": "tsx --conditions=source scripts/e2e.ts",
+    "smoke": "tsx --conditions=source scripts/api-smoke.ts",
+    "deploy:contracts": "tsx --conditions=source scripts/deploy.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -26,11 +26,11 @@ These spend testnet NEAR and NEAR AI credits, so they are scripts rather than CI
 ```bash
 # Every server function in-process: onboarding, a relayed invoice, the private
 # model with signature verification, Intel and NVIDIA verdicts.
-RELAYER_KEY=… NEARAI_API_KEY=… pnpm tsx scripts/api-smoke.ts
+RELAYER_KEY=… NEARAI_API_KEY=… pnpm smoke
 
 # One full paid invoice from the command line: account, sealed invoice with an
 # 85/15 split, faucet, payment, and both recipients' balances checked.
-pnpm tsx scripts/e2e.ts
+pnpm e2e
 ```
 
 Last recorded results (14 Nov 2026): onboarding, relayed `create_invoice`, 18/18 local attestation checks, signature verified, Intel TDX verified for all 3 enclaves, NVIDIA verified for 2 GPU nodes of 8 GPUs each; the e2e run paid a 25 USDC invoice and the freelancer received 21.25 USDC and the second recipient 3.75.

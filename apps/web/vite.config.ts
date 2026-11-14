@@ -12,6 +12,8 @@ const commit = (() => {
 })();
 
 // See src/shims/near-api-js-utils.ts: only the Meteor SDK's `near-api-js` import is redirected.
+// The app bundles the shared package from its TypeScript source; Node (the API functions) uses its build.
+const CORE = fileURLToPath(new URL("../../packages/core/src/index.ts", import.meta.url));
 const SHIM = fileURLToPath(new URL("./src/shims/near-api-js-utils.ts", import.meta.url));
 const fromMeteor = (importer?: string) => !!importer && importer.includes("@meteorwallet");
 
@@ -26,6 +28,7 @@ const meteorShim: Plugin = {
 
 export default defineConfig({
   plugins: [meteorShim, react()],
+  resolve: { alias: { "@nearvoice/core": CORE } },
   define: { global: "globalThis", "process.env": "{}", __COMMIT__: JSON.stringify(commit) },
   server: { port: 5176, proxy: { "/api": "http://localhost:3000" } },
   optimizeDeps: {

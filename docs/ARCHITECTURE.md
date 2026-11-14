@@ -56,7 +56,7 @@ Each file exports `POST(req: Request)`, the Web-standard signature Vercel runs. 
 
 ## Shared code (`packages/core`)
 
-Everything that both the server and the browser need, and everything worth unit-testing: money (integer cents and token units, never floats), the zod invoice schema, sealing, CSV export, 1Click quotes, attestation checks, signature recovery and the relay policy.
+Everything that both the server and the browser need, and everything worth unit-testing. The app and local scripts use its TypeScript source (a Vite alias and the `source` export condition); the deployed functions use its compiled `dist/` (`pnpm build` compiles it first). It covers money (integer cents and token units, never floats), the zod invoice schema, sealing, CSV export, 1Click quotes, attestation checks, signature recovery and the relay policy.
 
 ## Web app (`apps/web`)
 
