@@ -3,7 +3,7 @@
  * a freelancer account is created, issues a sealed invoice with an 85/15 split,
  * a client takes test USDC from the faucet and pays it, and the split arrives.
  *
- *   pnpm tsx scripts/e2e.ts
+ *   pnpm e2e
  */
 import { type InvoiceDetails, centsToUnits, open, seal, totalCents } from "@nearvoice/core";
 import { NEAR, call, createAccount, txUrl } from "./lib/near.js";

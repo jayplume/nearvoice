@@ -209,9 +209,10 @@ export function NewInvoice() {
   const [split, setSplit] = useState(true);
   const [sent, setSent] = useState<{ id: number; link: string; hash: string; details: InvoiceDetails } | null>(null);
 
+  // Fill "From" once the business profile has loaded (or failed to), so its name wins over the handle.
   useEffect(() => {
-    if (!fromName && id) setFromName(profile.data?.name || handleOf(id.accountId));
-  }, [profile.data, id, fromName]);
+    if (!fromName && id && !profile.isPending) setFromName(profile.data?.name || handleOf(id.accountId));
+  }, [profile.data, profile.isPending, id, fromName]);
   useEffect(() => {
     if (!number && issued.data) setNumber(`NV-${String(issued.data.length + 1).padStart(4, "0")}`);
   }, [issued.data, number]);

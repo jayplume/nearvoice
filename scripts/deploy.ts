@@ -4,7 +4,7 @@
  *   invoices.nearvoice.testnet  the invoice contract, accepting that USDC
  *   relay.nearvoice.testnet     the meta-transaction relayer's account (no code)
  *
- *   pnpm tsx scripts/deploy.ts
+ *   pnpm deploy:contracts
  */
 import { readFileSync } from "node:fs";
 import { NEAR, createAccount, send, txUrl } from "./lib/near.js";
