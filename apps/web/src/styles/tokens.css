@@ -1,0 +1,76 @@
+/*
+ * Nearvoice tokens. Light and dark are both designed, not inverted.
+ *   --brand  carbon-copy blue: actions, links, the brand
+ *   --paid   stamp green: money that arrived
+ *   --due    amber: waiting on someone
+ *   --void   red: cancelled, refused
+ *   --seal   violet: privacy (sealed, verified in a TEE)
+ */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eef1f5;
+  --bg-2: #e4e8ee;
+  --paper: #ffffff;
+  --paper-2: #f7f8fa;
+  --ink: #0d1321;
+  --ink-2: #48526a;
+  --ink-3: #8a93a6;
+  --rule: #dce1e9;
+  --brand: #3b5bfd;
+  --brand-ink: #2a45d6;
+  --brand-soft: #e6ebff;
+  --paid: #0f9f62;
+  --paid-soft: #dcf6e9;
+  --due: #c27a07;
+  --due-soft: #fdf0d8;
+  --void: #d92d20;
+  --void-soft: #fde4e1;
+  --seal: #6d4aff;
+  --seal-soft: #ece7ff;
+  --shadow: 0 1px 2px rgba(13, 19, 33, 0.06), 0 8px 24px rgba(13, 19, 33, 0.06);
+  --shadow-lg: 0 2px 6px rgba(13, 19, 33, 0.06), 0 30px 60px -20px rgba(13, 19, 33, 0.25);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #090c13;
+  --bg-2: #0f141e;
+  --paper: #131926;
+  --paper-2: #182030;
+  --ink: #e9edf5;
+  --ink-2: #a4aec0;
+  --ink-3: #6b768b;
+  --rule: #252e3f;
+  --brand: #7d93ff;
+  --brand-ink: #a3b3ff;
+  --brand-soft: #1b2450;
+  --paid: #34d58b;
+  --paid-soft: #0f3326;
+  --due: #f5b54a;
+  --due-soft: #3a2a0d;
+  --void: #ff7066;
+  --void-soft: #3d1714;
+  --seal: #a68bff;
+  --seal-soft: #251c4d;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.4), 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+}
+
+:root {
+  --sans: "Onest", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --t-xs: 0.8125rem;
+  --t-sm: 0.9375rem;
+  --t-md: 1.0625rem;
+  --t-lg: 1.3125rem;
+  --t-xl: 1.75rem;
+  --t-2xl: 2.5rem;
+  --t-hero: clamp(2.5rem, 1.4rem + 4.2vw, 4.75rem);
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --wrap: 1180px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
