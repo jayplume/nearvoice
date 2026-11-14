@@ -1,0 +1,16 @@
+[package]
+name = "nearvoice-usdc"
+version = "0.1.0"
+edition = "2021"
+description = "Test USDC for Nearvoice on NEAR testnet: NEP-141, 6 decimals, a faucet, and no storage step for receivers."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = { workspace = true }
+near-contract-standards = { workspace = true }
+
+[dev-dependencies]
+near-sdk = { workspace = true, features = ["unit-testing"] }
