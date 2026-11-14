@@ -138,7 +138,7 @@ describe("1Click quote", () => {
       return new Response(JSON.stringify({ quote: { amountIn: "252580276", amountInFormatted: "252.580276", amountInUsd: "252.49", amountOut: "250000000", amountOutUsd: "249.91", timeEstimate: 35 } }));
     };
     const q = await quotePayment(PAY_FROM[0]!, 250_000_000n, "ada.near", fake);
-    expect(sent).toMatchObject({ dry: true, swapType: "EXACT_OUTPUT", amount: "250000000", recipient: "ada.near" });
+    expect(sent).toMatchObject({ dry: true, swapType: "EXACT_OUTPUT", amount: "250000000", recipient: "ada.near", refundTo: "ada.near", refundType: "INTENTS" });
     expect(q.amountOut).toBe(250_000_000n);
     expect(q.feeUsd).toBe(2.58);
   });
