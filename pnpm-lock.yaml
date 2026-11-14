@@ -7,19 +7,23 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@nearvoice/core':
+        specifier: workspace:*
+        version: link:packages/core
+      borsh:
+        specifier: 2.0.0
+        version: 2.0.0
+      near-api-js:
+        specifier: 7.3.1
+        version: 7.3.1
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
-      '@nearvoice/core':
-        specifier: workspace:*
-        version: link:packages/core
       '@types/node':
         specifier: 24.9.1
         version: 24.9.1
-      near-api-js:
-        specifier: 7.3.1
-        version: 7.3.1
       tsx:
         specifier: 4.20.6
         version: 4.20.6

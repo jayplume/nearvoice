@@ -6,7 +6,9 @@
   "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@10.2.0",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "pnpm --filter web dev",
     "build": "pnpm -r build",
@@ -16,15 +18,23 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"],
-    "ignoredBuiltDependencies": ["@biomejs/biome", "secp256k1"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ],
+    "ignoredBuiltDependencies": [
+      "@biomejs/biome",
+      "secp256k1"
+    ]
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/node": "24.9.1",
     "tsx": "4.20.6",
-    "typescript": "5.9.3",
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
     "near-api-js": "7.3.1",
+    "borsh": "2.0.0",
     "@nearvoice/core": "workspace:*"
   }
 }
