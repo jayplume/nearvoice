@@ -4,7 +4,7 @@
 
 **Private invoices that get paid in stablecoins, without the freelancer ever touching crypto.**
 
-[Live app](https://nearvoice.vercel.app) · [Architecture](docs/ARCHITECTURE.md) · [Security model](docs/SECURITY.md) · [Testing](docs/TESTING.md) · [Self-audit](docs/AUDIT.md)
+[Live app](https://nearvoice.vercel.app) · [Demo video](https://github.com/jayplume/nearvoice/releases/download/v0.2.0/nearvoice-demo.mp4) · [Architecture](docs/ARCHITECTURE.md) · [Security model](docs/SECURITY.md) · [Testing](docs/TESTING.md) · [Self-audit](docs/AUDIT.md)
 
 ![Nearvoice](brand/og.png)
 
@@ -76,7 +76,7 @@ scripts/             deploy, end-to-end testnet run, API smoke test, local API s
 | NEAR Wallet Selector 10 (Meteor, Intear, HERE, Sender) | client payments |
 | Web Crypto (AES-256-GCM, SHA-256), @noble/curves | sealing, signature recovery |
 | Phala DCAP verifier, NVIDIA NRAS | hardware attestation verdicts |
-| NearBlocks API | transaction proof for every status |
+| NearBlocks API v3 | transaction proof for every status |
 | React 19, Vite 7, TanStack Query, Motion, zod, Vitest, Testing Library, Biome | app and tooling |
 
 Licensed MIT.

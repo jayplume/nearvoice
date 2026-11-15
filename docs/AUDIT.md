@@ -52,7 +52,7 @@ A private invoice is a new thing on a public chain: the amount is enforceable by
 
 | Dimension | Evidence |
 |---|---|
-| Technical implementation | Two Rust contracts (20 tests, clippy-clean) with cross-contract payouts and failure-safe callbacks; NEP-366 relaying with a tested policy; in-browser AES-GCM sealing with an on-chain digest; in-browser verification of TDX attestation and secp256k1 enclave signatures, plus Intel and NVIDIA hardware verdicts; 1Click quotes across six source assets; transaction proofs matched from NearBlocks; 24 TypeScript tests, including a real attestation fixture and React component tests; CI for both languages |
+| Technical implementation | Two Rust contracts (20 tests, clippy-clean) with cross-contract payouts and failure-safe callbacks; NEP-366 relaying with a tested policy; in-browser AES-GCM sealing with an on-chain digest; in-browser verification of TDX attestation and secp256k1 enclave signatures, plus Intel and NVIDIA hardware verdicts; 1Click quotes across six source assets; transaction proofs matched from NearBlocks; 28 TypeScript tests, including a real attestation fixture and React component tests; CI for both languages |
 | Design | A distinct visual identity (carbon-copy blue, stamp green, seal violet), light and dark themes designed separately, an invoice that visibly seals and gets stamped PAID, reduced-motion support, responsive down to phone width |
 | Impact | Freelancers lose time and fees on cross-border invoicing; Nearvoice gives them stablecoin payment without a wallet, gas or a public record of their rates |
 | Originality | Confidential invoice contents with public, contract-enforced settlement; an AI bookkeeper whose privacy the user's own browser checks |

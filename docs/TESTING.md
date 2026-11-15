@@ -17,6 +17,7 @@ CI runs all of the above on every push (`.github/workflows/ci.yml`) and builds t
 | `contracts/usdc/src/lib.rs` | 3 | Faucet amount and one-hour cooldown; automatic registration of receivers |
 | `packages/core/test/core.test.ts` | 13 | Integer money and fractional quantities; seal round trip, a digest mismatch reported, a wrong key and tampered ciphertext refused, the ciphertext not containing the client's name; CSV quoting; attestation against a **real NEAR AI Cloud report** saved with its nonce (`test/fixtures/report.json`): every check passes with our nonce and freshness fails with any other, `report_data` read from the raw TDX quote; EIP-191 signer recovery, and an edited response rejected; the 1Click request body |
 | `packages/core/test/relay.test.ts` | 3 | The relayer accepts a Nearvoice account's call to the invoice contract and refuses other contracts, outside accounts, transfers, deposits, unknown methods and excess gas; handle rules |
+| `apps/web/src/test/proofs.test.ts` | 4 | NearBlocks v3 receipts: only the invoice contract's, matched to each status by method, caller and millisecond (invoice #5's real receipts); empty answers; the cursor and a rate limit |
 | `apps/web/src/test/web.test.tsx` | 8 | The browser's split arithmetic against the contract's own test vectors; the invoice paper's lines, exact total, PAID stamp and sealed veil (React Testing Library); status wording; the key vault and that share links carry the key only in the fragment |
 
 ## Live checks against testnet and NEAR AI
