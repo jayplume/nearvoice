@@ -1889,6 +1889,17 @@ code {
   text-align: right;
 }
 
+/* On phones the ledger keeps the columns that matter (#, issuer, amount, status). */
+@media (max-width: 640px) {
+  .table .wide-only {
+    display: none;
+  }
+  .table th,
+  .table td {
+    padding: 10px 8px;
+  }
+}
+
 .sealed-blob {
   max-width: 220px;
   overflow: hidden;

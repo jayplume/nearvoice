@@ -53,9 +53,9 @@ export function Ledger() {
                   <th>Issuer</th>
                   <th className="r">Amount</th>
                   <th>Status</th>
-                  <th>Details on chain</th>
-                  <th>Recipients</th>
-                  <th>Created</th>
+                  <th className="wide-only">Details on chain</th>
+                  <th className="wide-only">Recipients</th>
+                  <th className="wide-only">Created</th>
                 </tr>
               </thead>
               <tbody>
@@ -69,11 +69,11 @@ export function Ledger() {
                     <td>
                       <StatusChip status={inv.status} />
                     </td>
-                    <td className="mono">
+                    <td className="mono wide-only">
                       <div className="sealed-blob">{inv.sealed}</div>
                     </td>
-                    <td>{inv.splits.length || 1}</td>
-                    <td className="faint">{ago(inv.created_ms)}</td>
+                    <td className="wide-only">{inv.splits.length || 1}</td>
+                    <td className="faint wide-only">{ago(inv.created_ms)}</td>
                   </tr>
                 ))}
               </tbody>
