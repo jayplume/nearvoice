@@ -8,7 +8,8 @@
 import type { ChainInvoice } from "./chain";
 import { INVOICES, USDC } from "./config";
 
-const API = "https://api-testnet.nearblocks.io/v1";
+/** NearBlocks API v3 (v1 is switched off on 22 Nov 2026). Keyless: about 8 requests a minute per visitor. */
+const API = "https://api-testnet.nearblocks.io/v3";
 
 export interface Receipt {
   method: string;
@@ -18,27 +19,46 @@ export interface Receipt {
   ok: boolean;
 }
 
-/** The contract's most recent receipts (up to `pages` × 100), newest first. */
-export async function contractReceipts(pages = 3): Promise<Receipt[]> {
+/** One page of NearBlocks v3 `accounts/{id}/receipts`, as receipts executed by the invoice contract. */
+export function parseReceipts(body: unknown): { receipts: Receipt[]; next?: string } {
+  const b = body as { data?: any[] | null; meta?: { next_page?: string | null } | null };
+  const rows = Array.isArray(b?.data) ? b.data : [];
+  const receipts: Receipt[] = [];
+  for (const t of rows) {
+    if (t?.receiver_account_id !== INVOICES) continue;
+    const ns = String(t.block?.block_timestamp ?? t.included_in_block_timestamp ?? "");
+    if (!/^\d+$/.test(ns)) continue;
+    receipts.push({
+      method: t.actions?.[0]?.method ?? "",
+      from: t.predecessor_account_id,
+      ms: Math.floor(Number(BigInt(ns) / 1_000_000n)),
+      hash: t.transaction_hash,
+      ok: t.outcome?.status !== false,
+    });
+  }
+  return { receipts, next: b?.meta?.next_page ?? undefined };
+}
+
+/**
+ * The contract's most recent receipts (up to `pages` × 100), newest first.
+ * A rate-limited or failed page ends the walk with what was read so far.
+ */
+export async function contractReceipts(pages = 2, fetcher: typeof fetch = fetch): Promise<Receipt[]> {
   const out: Receipt[] = [];
-  let cursor: string | undefined;
+  let next: string | undefined;
   for (let i = 0; i < pages; i++) {
-    const url = `${API}/account/${INVOICES}/receipts?per_page=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`;
-    const res = await fetch(url);
-    if (!res.ok) break;
-    const body = await res.json();
-    for (const t of body.txns ?? []) {
-      if (t.receiver_account_id !== INVOICES) continue;
-      out.push({
-        method: t.actions?.[0]?.method ?? "",
-        from: t.predecessor_account_id,
-        ms: Math.floor(Number(BigInt(String(t.block_timestamp)) / 1_000_000n)),
-        hash: t.transaction_hash,
-        ok: t.receipt_outcome?.status !== false,
-      });
+    const url = `${API}/accounts/${INVOICES}/receipts?limit=100${next ? `&next=${encodeURIComponent(next)}` : ""}`;
+    let res: Response;
+    try {
+      res = await fetcher(url);
+    } catch {
+      break;
     }
-    cursor = body.cursor;
-    if (!cursor || (body.txns ?? []).length < 100) break;
+    if (!res.ok) break;
+    const page = parseReceipts(await res.json());
+    out.push(...page.receipts);
+    next = page.next;
+    if (!next) break;
   }
   return out;
 }
