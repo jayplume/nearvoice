@@ -3,7 +3,11 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { type Plugin, defineConfig } from "vite";
 
+// The footer links the commit a build came from. Hosted builds run without .git, so the deploy passes it in
+// (COMMIT_SHA, or Vercel's own variable when it builds from Git); local builds ask git.
 const commit = (() => {
+  const fromEnv = process.env.COMMIT_SHA ?? process.env.VERCEL_GIT_COMMIT_SHA;
+  if (fromEnv) return fromEnv.slice(0, 7);
   try {
     return execSync("git rev-parse --short HEAD").toString().trim();
   } catch {
